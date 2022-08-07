@@ -1,0 +1,122 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+
+  CountPerTarget:
+    Type: AWS::CloudWatch::Alarm
+    Properties: 
+      AlarmActions: 
+      - arn:aws:sns:ap-northeast-1:699946123554:pip-test # アラーム時に実行するSNSのarn
+      AlarmDescription: ターゲット数
+      AlarmName: pip-test-CountPerTargete
+      ComparisonOperator: LessThanOrEqualToThreshold # 以下を表す
+      DatapointsToAlarm: 1 # データポイント数
+      Dimensions : 
+        - Name : TargetGroup
+          Value : targetgroup/pip-test-tg-cf/cb8dbc62b8c1972a
+      EvaluationPeriods: 5 # 直近の評価期間
+      MetricName: RequestCountPerTarget
+      Namespace: AWS/ApplicationELB
+      Period: 60 # 1分
+      Statistic: Minimum # 最小値
+      Threshold: 1 #閾値
+      TreatMissingData: breaching
+
+  HTTPStatusCode:
+    Type: AWS::CloudWatch::Alarm
+    Properties: 
+      AlarmActions: 
+      - arn:aws:sns:ap-northeast-1:699946123554:pip-test # アラーム時に実行するSNSのarn
+      AlarmDescription: HTTPSステータスコード
+      AlarmName: pip-test-HTTPStatusCode
+      ComparisonOperator: GreaterThanOrEqualToThreshold # 以上を表す
+      DatapointsToAlarm: 1 # データポイント数
+      Dimensions : 
+        - Name : LoadBalancer
+          Value : app/pip-test-alb-cf/717326fe950bae43
+      EvaluationPeriods: 5 # 直近の評価期間
+      MetricName: HTTPCode_ELB_5XX_Count
+      Namespace: AWS/ApplicationELB
+      Period: 60 # 1分
+      Statistic: Maximum # 最大値
+      Threshold: 1 #閾値
+      TreatMissingData: breaching
+
+  CPUUtilization:
+    Type: AWS::CloudWatch::Alarm
+    Properties: 
+      AlarmActions: 
+      - arn:aws:sns:ap-northeast-1:699946123554:pip-test # アラーム時に実行するSNSのarn
+      AlarmDescription: CPU使用率
+      AlarmName: pip-test-CPUUtilization
+      ComparisonOperator: GreaterThanOrEqualToThreshold # 以上を表す
+      DatapointsToAlarm: 1 # データポイント数
+      Dimensions : 
+        - Name : ClusterName
+          Value : PipchatCluster
+      EvaluationPeriods: 5 # 直近の評価期間
+      MetricName: CPUUtilization
+      Namespace: AWS/ECS
+      Period: 60 # 1分
+      Statistic: Maximum # 最大値
+      Threshold: 70 #閾値
+      TreatMissingData: breaching # 欠落データは「不良」とされる
+  
+  CPUReservation:
+    Type: AWS::CloudWatch::Alarm
+    Properties: 
+      AlarmActions: 
+      - arn:aws:sns:ap-northeast-1:699946123554:pip-test # アラーム時に実行するSNSのarn
+      AlarmDescription: CPU予約率
+      AlarmName: pip-test-CPUReservation
+      ComparisonOperator: LessThanOrEqualToThreshold # 以下を表す
+      DatapointsToAlarm: 1 # データポイント数
+      Dimensions : 
+        - Name : ClusterName
+          Value : PipchatCluster
+      EvaluationPeriods: 5 # 直近の評価期間
+      MetricName: CPUReservation
+      Namespace: AWS/ECS
+      Period: 60 # 1分
+      Statistic: Minimum # 最小値
+      Threshold: 50 #閾値
+      TreatMissingData: breaching
+
+  MemoryUtilization:
+    Type: AWS::CloudWatch::Alarm
+    Properties: 
+      AlarmActions: 
+      - arn:aws:sns:ap-northeast-1:699946123554:pip-test # アラーム時に実行するSNSのarn
+      AlarmDescription: メモリ使用率
+      AlarmName: pip-test-MemoryUtilization
+      ComparisonOperator: GreaterThanOrEqualToThreshold # 以上を表す
+      DatapointsToAlarm: 1 # データポイント数
+      Dimensions : 
+        - Name : ClusterName
+          Value : PipchatCluster
+      EvaluationPeriods: 5 # 直近の評価期間
+      MetricName: MemoryUtilization
+      Namespace: AWS/ECS
+      Period: 60 # 1分
+      Statistic: Maximum # 最大値
+      Threshold: 70 #閾値
+      TreatMissingData: breaching
+
+  MemoryReservation:
+    Type: AWS::CloudWatch::Alarm
+    Properties: 
+      AlarmActions: 
+      - arn:aws:sns:ap-northeast-1:699946123554:pip-test # アラーム時に実行するSNSのarn
+      AlarmDescription: メモリ予約率
+      AlarmName: pip-test-MemoryReservation
+      ComparisonOperator: LessThanOrEqualToThreshold # 以下を表す
+      DatapointsToAlarm: 1 # データポイント数
+      Dimensions : 
+        - Name : ClusterName
+          Value : PipchatCluster
+      EvaluationPeriods: 5 # 直近の評価期間
+      MetricName: MemoryReservation
+      Namespace: AWS/ECS
+      Period: 60 # 1分
+      Statistic: Minimum # 最小値
+      Threshold: 50 #閾値
+      TreatMissingData: breaching
